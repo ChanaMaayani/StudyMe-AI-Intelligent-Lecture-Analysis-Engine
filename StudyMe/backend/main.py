@@ -146,9 +146,13 @@ if os.path.exists(cert_path):
     print(f"Loading NetFree certificate from: {cert_path}")
     os.environ['SSL_CERT_FILE'] = cert_path
     os.environ['REQUESTS_CA_BUNDLE'] = cert_path
+    os.environ['GRPC_DEFAULT_SSL_ROOTS_FILE_PATH'] = cert_path
 
 # ביטול אימות SSL מחמיר (פותר בעיות באתרוג/נטפרי)
 ssl._create_default_https_context = ssl._create_unverified_context
+os.environ['CURL_CA_BUNDLE'] = ""
+os.environ['PYTHONHTTPSVERIFY'] = "0"
+os.environ['GRPC_SSL_CIPHER_SUITES'] = 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384'
 
 # --- 2. אתחול והגדרת ג'מיני ---
 load_dotenv()
@@ -157,7 +161,6 @@ api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
     print("❌ Error: GEMINI_API_KEY not found in .env file")
 
-# הגדרה קריטית לנטפרי: שימוש ב-REST HTTP במקום gRPC
 genai.configure(api_key=api_key, transport='rest')
 
 app = FastAPI()
@@ -180,11 +183,9 @@ async def analyze_media(file: UploadFile = File(...)):
         with open(temp_file_path, "wb") as buffer:
             buffer.write(await file.read())
 
-        # ב. העלאה לגוגל
         print(f"Uploading {filename} to Gemini...")
         google_file = genai.upload_file(path=temp_file_path)
 
-        # ג. המתנה לעיבוד (חשוב לקבצים כבדים)
         while google_file.state.name == "PROCESSING":
             print("Processing media...")
             time.sleep(2)
@@ -225,13 +226,9 @@ async def analyze_media(file: UploadFile = File(...)):
 
         print("Generating content...")
         
-        # ה. בחירת המודל - משתמשים בגרסה היציבה ביותר
-        # אם זה נכשל שוב, נסה לשנות ל: 'gemini-1.5-pro'
         model = genai.GenerativeModel('gemini-1.5-flash')
-        
         response = model.generate_content([google_file, prompt])
         
-        # ו. ניקוי התשובה
         raw_text = response.text
         # מנקים סימני Markdown אם המודל הוסיף אותם בטעות
         if raw_text.startswith("```json"):
@@ -249,7 +246,10 @@ async def analyze_media(file: UploadFile = File(...)):
     finally:
         # ז. ניקוי קבצים (חשוב מאוד!)
         if os.path.exists(temp_file_path):
-            os.remove(temp_file_path)
+            try:
+                os.remove(temp_file_path)
+            except:
+                pass
         
         if google_file:
             try:
