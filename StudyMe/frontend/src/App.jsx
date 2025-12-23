@@ -75,7 +75,7 @@ function App() {
     formData.append('file', file)
 
     try {
-      const response = await axios.post('http://localhost:8000/analyze', formData)
+      const response = await axios.post('http://localhost:9000/analyze', formData)
       setResult(response.data)
     } catch (error) {
       console.error("Error:", error)
@@ -122,42 +122,65 @@ function App() {
           </div>
           
           <button className="cta-button" onClick={handleUpload} disabled={loading || !file}>
-            {loading ? <div className="loader"></div> : <span>התחל ניתוח חכם 🚀</span>}
+            {loading ? (
+              <>
+                <div className="loader"></div>
+                <span>מעבד את הקובץ...</span>
+              </>
+            ) : (
+              <>
+                <span>🚀</span>
+                <span>התחל ניתוח חכם</span>
+              </>
+            )}
           </button>
         </div>
 
         {result && (
-          <div className="content-grid">
+          <div className="content-stack">
             
             {/* סיכום */}
             <div className="glass-card">
-              <div className="card-header">📝 סיכום השיעור</div>
-              <p className="summary-text">{result.summary}</p>
-              <div className="tags-container">
-                {result.key_points?.map((point, i) => (
-                  <span key={i} className="tag">#{point}</span>
-                ))}
+              <div className="card-header">
+                <span>📝</span>
+                <span>סיכום השיעור</span>
               </div>
+              <p className="summary-text">{result.summary}</p>
+              {result.key_points?.length > 0 && (
+                <div className="tags-container">
+                  {result.key_points.map((point, i) => (
+                    <span key={i} className="tag">#{point}</span>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* משימות */}
             <div className="glass-card">
-              <div className="card-header">⚡ משימות לביצוע</div>
+              <div className="card-header">
+                <span>⚡</span>
+                <span>משימות לביצוע</span>
+              </div>
               {result.tasks?.length > 0 ? (
                 <ul className="custom-checklist">
                   {result.tasks.map((task, i) => (
                     <li key={i}>
-                      <input type="checkbox" id={`t-${i}`} />
-                      <label htmlFor={`t-${i}`}>{task}</label>
+                      <input type="checkbox" id={`task-${i}`} />
+                      <label htmlFor={`task-${i}`}>{task}</label>
                     </li>
                   ))}
                 </ul>
-              ) : <p>אין משימות מיוחדות לשיעור זה 🎉</p>}
+              ) : (
+                <p>אין משימות מיוחדות לשיעור זה 🎉</p>
+              )}
             </div>
 
             {/* מבחן */}
-            <div className="glass-card" style={{ gridColumn: '1 / -1' }}> {/* תופס את כל הרוחב */}
-              <div className="card-header">🧠 בחן את עצמך</div>
+            <div className="glass-card">
+              <div className="card-header">
+                <span>🧠</span>
+                <span>בחן את עצמך</span>
+              </div>
               
               {!showScore ? (
                 <>
@@ -178,13 +201,16 @@ function App() {
                     </div>
                   ))}
                   <button className="cta-button" style={{width: '100%', marginTop: '20px'}} onClick={() => setShowScore(true)}>
-                    הגש מבחן וקבל ציון 🏆
+                    <span>🏆</span>
+                    <span>הגש מבחן וקבל ציון</span>
                   </button>
                 </>
               ) : (
                 <div className="score-badge">
-                  <div>הציון שלך: {calculateScore()}</div>
-                  <button onClick={() => {setShowScore(false); setQuizAnswers({})}}>נסה שוב 🔄</button>
+                  <div>הציון שלך: {calculateScore()}%</div>
+                  <button onClick={() => {setShowScore(false); setQuizAnswers({})}}>
+                    נסה שוב 🔄
+                  </button>
                 </div>
               )}
             </div>

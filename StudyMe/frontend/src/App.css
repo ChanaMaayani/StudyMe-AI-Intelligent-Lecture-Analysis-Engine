@@ -125,6 +125,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
 }
 
 .cta-button:hover:not(:disabled) {
@@ -138,9 +139,9 @@ body {
 }
 
 /* --- תוצאות --- */
-.content-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+.content-stack {
+  display: flex;
+  flex-direction: column;
   gap: 25px;
   text-align: right;
   width: 100%;
@@ -161,6 +162,9 @@ body {
   margin-bottom: 15px;
   border-bottom: 2px solid #edf2f7;
   padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* סיכום */
@@ -202,12 +206,21 @@ body {
 }
 .option-btn:hover { background: #f7fafc; border-color: #cbd5e0; }
 .option-btn.selected { background: #e9d8fd; border-color: #764ba2; color: #553c9a; }
-.option-btn.correct { background: #c6f6d5 !important; border-color: #48bb78; }
-.option-btn.wrong { background: #fed7d7 !important; border-color: #f56565; }
 
 .score-badge {
   text-align: center; font-size: 1.5rem; font-weight: bold; color: #764ba2;
   padding: 20px; background: #f7fafc; border-radius: 12px;
+}
+
+.score-badge button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #764ba2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
 }
 
 /* ספינר */
@@ -221,5 +234,4 @@ body {
 @media (max-width: 768px) {
   .glass-container { padding: 20px; width: 95%; }
   .logo { font-size: 3rem; }
-  .content-grid { grid-template-columns: 1fr; }
 }

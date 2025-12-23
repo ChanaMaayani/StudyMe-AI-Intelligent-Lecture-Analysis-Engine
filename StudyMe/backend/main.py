@@ -1,12 +1,12 @@
-# import os
-# import json
-# import time
-# import ssl
-# import uvicorn
-# from fastapi import FastAPI, UploadFile, File, HTTPException
-# from fastapi.middleware.cors import CORSMiddleware
-# from dotenv import load_dotenv
-# import google.generativeai as genai
+import os
+import json
+import time
+import ssl
+import uvicorn
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+import google.generativeai as genai
 
 # # --- הגדרות נטפרי ---
 # current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -224,10 +224,20 @@ async def analyze_media(file: UploadFile = File(...)):
         Use Hebrew for all values.
         """
 
-        print("Generating content...")
+        # Try different model names until one works
+        model_names = ['gemini-flash-latest', 'gemini-pro', 'models/gemini-pro', 'gemini-1.5-flash']
         
-        model = genai.GenerativeModel('gemini-1.5-flash')
-        response = model.generate_content([google_file, prompt])
+        for model_name in model_names:
+            try:
+                print(f"Trying model: {model_name}")
+                model = genai.GenerativeModel(model_name)
+                response = model.generate_content([google_file, prompt])
+                break
+            except Exception as model_error:
+                print(f"Model {model_name} failed: {model_error}")
+                if model_name == model_names[-1]:  # Last model
+                    raise model_error
+                continue
         
         raw_text = response.text
         # מנקים סימני Markdown אם המודל הוסיף אותם בטעות
@@ -259,4 +269,4 @@ async def analyze_media(file: UploadFile = File(...)):
                 print(f"Could not delete remote file: {e}")
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=9000)
