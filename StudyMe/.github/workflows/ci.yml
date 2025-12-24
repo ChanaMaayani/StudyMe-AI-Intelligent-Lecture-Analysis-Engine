@@ -1,4 +1,4 @@
-name: Backend CI
+name: CI/CD Pipeline
 
 on:
   push:
@@ -28,3 +28,21 @@ jobs:
         run: |
           cd backend
           pytest
+
+  build-docker:
+    runs-on: ubuntu-latest
+    needs: test-backend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker images
+        run: |
+          docker compose build
+
+      - name: Test Docker containers
+        run: |
+          docker compose up -d
+          sleep 10
+          docker compose down
