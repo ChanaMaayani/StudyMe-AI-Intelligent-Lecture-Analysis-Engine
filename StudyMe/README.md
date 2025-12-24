@@ -60,28 +60,26 @@ This is a real AI workflow using uploaded media files.
 
 ## System Architecture
 
-Frontend (React)  
-→ Backend (FastAPI)  
-→ Gemini API  
-→ Structured AI response  
-→ Frontend display
+```
+Frontend (React) → Backend (FastAPI) → Gemini API → Structured AI response → Frontend display
+```
 
 ---
 
 ## Technology Stack
 
-Frontend:
+**Frontend:**
 - React
 - Vite
 - JavaScript
 
-Backend:
+**Backend:**
 - Python
 - FastAPI
 - Uvicorn
 - Gemini API
 
-DevOps:
+**DevOps:**
 - Docker
 - Docker Compose
 - GitHub
@@ -92,7 +90,7 @@ DevOps:
 
 The entire project runs inside Docker containers.
 
-Containers:
+**Containers:**
 - Frontend container
 - Backend container
 
@@ -114,44 +112,37 @@ git clone <REPOSITORY_URL>
 cd StudyMe
 
 Create .env file inside backend/:
+```
 GEMINI_API_KEY=your_api_key_here
+```
 
 Build and run:
+```bash
 docker compose up --build
+```
 
-Access the application at:
-Application URLs
-Frontend:
-http://localhost:4173
+### Application URLs
+- **Frontend:** http://localhost:4173
+- **Backend API:** http://localhost:8080  
+- **API Documentation (Swagger):** http://localhost:8080/docs
 
-Backend API:
-http://localhost:8080
+## Testing
 
-API Documentation (Swagger):
-http://localhost:8080/docs
-
-Testing
 The project includes automated backend tests.
 
-Testing tools:
+**Testing tools:**
+- pytest
+- httpx
 
-pytest
+**Tests include:**
+- API endpoint tests
+- File upload validation
+- Integration flow testing
 
-httpx
+**Tests are located in:** `backend/tests/`
+## Project Structure
 
-Tests include:
-
-API endpoint tests
-
-File upload validation
-
-Integration flow testing
-
-Tests are located in:
-backend/tests/
-Project Structure
-css
-
+```
 StudyMe/
 ├── backend/
 │   ├── main.py
@@ -166,45 +157,36 @@ StudyMe/
 ├── docker-compose.yml
 ├── .gitignore
 └── README.md
-CI/CD (Optional)
+```
+## CI/CD (Optional)
+
 The project is prepared for CI/CD integration.
 
-Possible pipeline stages:
+**Possible pipeline stages:**
+- Install dependencies
+- Run tests
+- Build Docker images
+- Deploy locally or to the cloud
 
-Install dependencies
+## Final Presentation Topics
 
-Run tests
+- Problem definition
+- Product demo
+- System architecture
+- AI integration workflow
+- Backend responsibilities
+- Testing strategy
+- Dockerization
+- Challenges and learnings
 
-Build Docker images
+## Team
 
-Deploy locally or to the cloud
-
-Final Presentation Topics
-Problem definition
-
-Product demo
-
-System architecture
-
-AI integration workflow
-
-Backend responsibilities
-
-Testing strategy
-
-Dockerization
-
-Challenges and learnings
-
-Team
 This project was developed as a pair project.
 
-Authors:
+**Authors:**
+- Elisheva Wislovsky
+- Chana Maayani
 
-Elisheva Wislovsky
+## Summary
 
-Chana Maayani
-
-Summary
 StudyMe is a complete, Dockerized AI web application that demonstrates real backend logic, AI integration, testing, and modern development practices.
----
