@@ -2,9 +2,19 @@
 backend/venv/
 backend/__pycache__/
 backend/.env
+*.pyc
+*.pyo
+*.pyd
 
-backend/*.m4a
+# Temp files
 temp_*
+*.log
+
+# Media
+*.mp4
+*.mp3
+*.wav
+backend/*.m4a
 
 # Node / React
 frontend/node_modules/

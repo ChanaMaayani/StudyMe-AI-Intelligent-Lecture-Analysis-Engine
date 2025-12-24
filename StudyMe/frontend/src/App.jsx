@@ -75,7 +75,7 @@ function App() {
     formData.append('file', file)
 
     try {
-      const response = await axios.post('http://localhost:9000/analyze', formData)
+      const response = await axios.post('http://localhost:8080/analyze', formData)
       setResult(response.data)
     } catch (error) {
       console.error("Error:", error)
